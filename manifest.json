@@ -1,0 +1,24 @@
+{
+  "name": "personal-bookmarks-extention",
+  "description": "personal-bookmarks-extention",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "content.js"
+      ],
+      "matches": [
+        "https://*/*"
+      ]
+    }
+  ],
+  "permissions": ["tabs", "cookies"],
+  "host_permissions": ["*://*/*"]
+}
