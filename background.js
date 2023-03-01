@@ -1,40 +1,33 @@
-// tabs.query は指定した条件に当てはまるタブを全て取得する。
-// この場合はアクティブなタブが一つ取得できる。
-chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-  console.log({ tabs })
-});
-
 chrome.runtime.onMessage.addListener(async (request) => {
-
-  // 期待通りのリクエストかどうかをチェック
-  if (request.name === 'displayUrl:background') {
-    let url;
-    let id;
-
-    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      console.log({ tabs })
-      url = tabs[0].url;
-      id = tabs[0].id
-
-      // content_script へデータを送る
-      chrome.tabs.sendMessage(id, { // content_script はタブごとに存在するため ID 指定する必要がある
-        name: 'displayUrl:contentScripts',
-        data: {
-          url
-        }
+  switch (request.name) {
+    case 'login:background':
+      await fetch('http://127.0.0.1:5000/api/login', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username: 'user', password: 'password' }),
       })
-    });
-  }
+      return
 
-  if (request.name === 'postBookmark:background') {
+    case 'logout:background':
+      await fetch('http://127.0.0.1:5000/api/logout', {
+        method: 'delete',
+      })
+      return
 
-    await fetch('http://127.0.0.1:5000/api/bookmarks', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ title: 'from extention', url: 'http://example.com/extention' }),
-    })
+    case 'postBookmark:background':
+      console.log(request.data)
+      await fetch('http://127.0.0.1:5000/api/bookmarks', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ title: request.data.title, url: request.data.url }),
+      })
+      return
+
+    default: return
   }
-});
+})

@@ -1,18 +1,3 @@
-// ボタンクリック時に実行する処理を定義
-const button = document.getElementById('login')
-button.addEventListener('click', async () => {
-  // とりあえず console.log してみる
-  // console.log('clicked!')
-  // chrome.runtime.sendMessage({ name: 'displayUrl:background' })
-  await fetch('http://127.0.0.1:5000/api/login', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ username: 'user', password: 'password' }),
-  })
-})
-
 // ```
 // % curl -X POST \
 // -H "Content-Type: application/json" \
@@ -21,12 +6,6 @@ button.addEventListener('click', async () => {
 // http://127.0.0.1:5000/api/login
 // ```
 
-const form = document.querySelector('form')
-form.addEventListener('submit', async (e) => {
-  e.preventDefault()
-  chrome.runtime.sendMessage({ name: 'postBookmark:background' })
-})
-
 // ```
 // % curl -X POST \
 // -H "Content-Type: application/json" \
@@ -34,3 +13,35 @@ form.addEventListener('submit', async (e) => {
 // -d "{ \"title\": \"API\", \"url\": \"https://example.com/api\" }" \
 // http://127.0.0.1:5000/api/bookmarks
 // ```
+
+async function getCurrentTab() {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+  return tabs[0]
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const tab = await getCurrentTab()
+  console.log(tab.title, tab.url)
+
+  const urlInput = document.getElementById('url')
+  urlInput.value = tab.url
+
+  const titleInput = document.getElementById('title')
+  titleInput.value = tab.title
+
+  const form = document.querySelector('form')
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    chrome.runtime.sendMessage({ name: 'postBookmark:background', data: { url: tab.url, title: tab.title } })
+  })
+
+  const loginButton = document.getElementById('login')
+  loginButton.addEventListener('click', () => {
+    chrome.runtime.sendMessage({ name: 'login:background' })
+  })
+
+  const logoutButton = document.getElementById('logout')
+  logoutButton.addEventListener('click', () => {
+    chrome.runtime.sendMessage({ name: 'logout:background' })
+  })
+})

@@ -9,16 +9,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "js": [
-        "content.js"
-      ],
-      "matches": [
-        "https://*/*"
-      ]
-    }
-  ],
   "permissions": ["tabs", "cookies"],
   "host_permissions": ["*://*/*"]
 }
