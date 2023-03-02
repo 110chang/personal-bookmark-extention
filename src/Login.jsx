@@ -1,30 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, Button, Form } from 'react-bootstrap';
-import useError from './lib/useError';
-
-function useLogin() {
-  const [form, setForm] = useState({
-    username: '',
-    password: '',
-  })
-
-  const updateForm = (prop, value) => {
-    setForm(prev => ({
-      ...prev,
-      [prop]: value,
-    }))
-  }
-
-  return {
-    form,
-    updateForm,
-  }
-}
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Alert, Button, Form } from 'react-bootstrap'
+import { logIn } from './lib/api'
+import useAuth from './lib/useAuth'
+import useError from './lib/useError'
+import useForm from './lib/useForm'
 
 function Login() {
   const navigate = useNavigate()
-  const { form, updateForm } = useLogin()
+  const { loggedIn } = useAuth()
+  const { form, updateForm } = useForm({ username: '', password: '' })
   const { error, updateError } = useError()
 
   const onChange = (prop) => (e) => {
@@ -34,20 +19,16 @@ function Login() {
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    const res = await fetch('http://127.0.0.1:5000/api/login', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({ username: form.username, password: form.password }),
-    })
+    const res = await logIn(form)
+    const json = await res.json()
+    console.log(json.error)
 
     if (!res.ok) {
-      updateError(`${res.status} ${res.statusText}`)
+      updateError(json.error ? `${json.error}` : `${res.status} ${res.statusText}`)
       return
     }
 
+    loggedIn(json.data)
     navigate('/')
   }
 

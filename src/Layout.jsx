@@ -1,18 +1,20 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { Button, Container, Nav, Navbar } from 'react-bootstrap';
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Button, Container, Nav, Navbar } from 'react-bootstrap'
+import { logOut } from './lib/api'
+import useAuth from './lib/useAuth'
 
 function Layout() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const { loggedOut } = useAuth()
 
   const logout = async () => {
-    const res = await fetch('http://127.0.0.1:5000/api/logout', {
-      method: 'delete',
-    })
+    const res = await logOut()
 
     if (!res.ok) {
       console.error('logout failed')
     }
 
+    loggedOut()
     navigate('/login');
   }
 
