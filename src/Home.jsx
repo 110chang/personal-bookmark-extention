@@ -3,24 +3,29 @@ import { useNavigate } from 'react-router-dom'
 import { Alert, Button, Form } from 'react-bootstrap'
 import { refreshAuth, postBookmarks } from './lib/api'
 import { getUser } from './lib/storage'
-import useAuth from './lib/useAuth'
+import useAuthAtom from './lib/useAuthAtom'
 import useError from './lib/useError'
+import useTabAtom from './lib/useTabAtom'
 import useHome from './useHome'
 
 function Home() {
   const navigate = useNavigate()
-  const { username, loggedIn, loggedOut } = useAuth()
+  const { username, loggedIn, loggedOut } = useAuthAtom()
   const { error, updateError } = useError()
-  const { form, message, clearForm, updateForm, updateMessage } = useHome()
+  const { message, updateMessage } = useHome()
+  const { tab, updateTab, clearTab } = useTabAtom()
 
   const onChange = (prop) => (e) => {
-    updateForm(prop, e.target.value)
+    updateTab({
+      ...tab,
+      [prop]: e.target.value,
+    })
   }
 
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    const res = await postBookmarks(form)
+    const res = await postBookmarks(tab)
     const json = await res.json()
 
     if (!res.ok) {
@@ -34,14 +39,16 @@ function Home() {
     }
 
     updateMessage('Successfully added.')
-    clearForm()
+    clearTab()
   }
 
   useEffect(() => {
+    console.log(username)
     if (username) return
 
     ;(async function() {
-      const savedUser = getUser()
+      const savedUser = await getUser()
+      console.log(savedUser)
       const res = await refreshAuth({ id: savedUser ? savedUser.id : '' })
       const json = await res.json()
 
@@ -61,12 +68,12 @@ function Home() {
       <Form className="d-flex flex-column" onSubmit={onSubmit}>
         <Form.Group className="mb-3" controlId="username">
           <Form.Label>Title</Form.Label>
-          <Form.Control name="title" placeholder="Title" type="text" value={form.title} onChange={onChange('title')} />
+          <Form.Control name="title" placeholder="Title" type="text" value={tab.title} onChange={onChange('title')} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="url">
           <Form.Label>URL</Form.Label>
-          <Form.Control name="url" placeholder="URL" type="text" value={form.url} onChange={onChange('url')} />
+          <Form.Control name="url" placeholder="URL" type="text" value={tab.url} onChange={onChange('url')} />
         </Form.Group>
         {error ? (
           <Alert variant="danger">

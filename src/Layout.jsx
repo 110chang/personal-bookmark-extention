@@ -1,11 +1,16 @@
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Button, Container, Nav, Navbar } from 'react-bootstrap'
 import { logOut } from './lib/api'
-import useAuth from './lib/useAuth'
+import { getCurrentTab } from './lib/chromeTab'
+import useAuthAtom from './lib/useAuthAtom'
+import useTabAtom from './lib/useTabAtom'
 
 function Layout() {
   const navigate = useNavigate()
-  const { loggedOut } = useAuth()
+  const location = useLocation()
+  const { isLoggedIn, loggedOut } = useAuthAtom()
+  const { updateTab } = useTabAtom()
 
   const logout = async () => {
     const res = await logOut()
@@ -18,6 +23,13 @@ function Layout() {
     navigate('/login');
   }
 
+  useEffect(() => {
+    ;(async function () {
+      const tab = await getCurrentTab()
+      updateTab(tab || { title: '', url: '' })
+    }())
+  }, [location])
+
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -29,7 +41,9 @@ function Layout() {
               <Nav.Link as={Link} to="/login">Login</Nav.Link>
             </Nav>
           </Navbar.Collapse>
-          <Button variant="primary" onClick={logout}>Logout</Button>
+          {isLoggedIn ? (
+            <Button variant="primary" onClick={logout}>Logout</Button>
+          ) : null}
         </Container>
       </Navbar>
       <Container className="py-3">

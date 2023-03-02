@@ -6,6 +6,6 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["tabs", "cookies"],
+  "permissions": ["tabs", "cookies", "storage"],
   "host_permissions": ["*://*/*"]
 }

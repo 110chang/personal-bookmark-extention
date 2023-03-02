@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button, Form } from 'react-bootstrap'
 import { logIn } from './lib/api'
-import useAuth from './lib/useAuth'
+import useAuthAtom from './lib/useAuthAtom'
 import useError from './lib/useError'
 import useForm from './lib/useForm'
 
 function Login() {
   const navigate = useNavigate()
-  const { loggedIn } = useAuth()
+  const { loggedIn } = useAuthAtom()
   const { form, updateForm } = useForm({ username: '', password: '' })
   const { error, updateError } = useError()
 
@@ -21,7 +21,6 @@ function Login() {
 
     const res = await logIn(form)
     const json = await res.json()
-    console.log(json.error)
 
     if (!res.ok) {
       updateError(json.error ? `${json.error}` : `${res.status} ${res.statusText}`)

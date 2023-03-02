@@ -3,12 +3,13 @@ import { clearUser, saveUser } from './storage'
 
 const authAtom = atom(null)
 
-function useAuth() {
+function useAuthAtom() {
   const [auth, setAuth] = useAtom(authAtom)
   const id = auth ? auth.id : ''
   const username = auth ? auth.username : ''
 
   const loggedIn = (data) => {
+    console.log(data)
     setAuth(data)
     saveUser(data)
   }
@@ -21,9 +22,10 @@ function useAuth() {
   return {
     id,
     username,
+    isLoggedIn: id && username,
     loggedIn,
     loggedOut,
   }
 }
 
-export default useAuth
+export default useAuthAtom
