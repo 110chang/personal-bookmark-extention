@@ -1,34 +1,12 @@
-import { useEffect } from 'react'
-import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import { Button, Container, Nav, Navbar } from 'react-bootstrap'
-import { logOut } from './lib/api'
-import { getCurrentTab } from './lib/chromeTab'
-import useAuthAtom from './lib/useAuthAtom'
-import useTabAtom from './lib/useTabAtom'
+import useLayout from './useLayout'
 
 function Layout() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { isLoggedIn, loggedOut } = useAuthAtom()
-  const { updateTab } = useTabAtom()
-
-  const logout = async () => {
-    const res = await logOut()
-
-    if (!res.ok) {
-      console.error('logout failed')
-    }
-
-    loggedOut()
-    navigate('/login');
-  }
-
-  useEffect(() => {
-    ;(async function () {
-      const tab = await getCurrentTab()
-      updateTab(tab || { title: '', url: '' })
-    }())
-  }, [location])
+  const {
+    isLoggedIn,
+    logOut,
+  } = useLayout()
 
   return (
     <>
@@ -42,7 +20,7 @@ function Layout() {
             </Nav>
           </Navbar.Collapse>
           {isLoggedIn ? (
-            <Button variant="primary" onClick={logout}>Logout</Button>
+            <Button variant="primary" onClick={logOut}>Logout</Button>
           ) : null}
         </Container>
       </Navbar>
