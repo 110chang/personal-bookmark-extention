@@ -37,3 +37,10 @@ export function postBookmarks({ title = '', url = ''}) {
     body: JSON.stringify({ title, url }),
   })
 }
+
+export default {
+  logIn,
+  logOut,
+  refreshAuth,
+  postBookmarks,
+}

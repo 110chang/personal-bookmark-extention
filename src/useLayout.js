@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { logOut as apiLogOut } from './lib/api'
+import { logOut as apiLogOut } from './lib/repository'
 import { getCurrentTab } from './lib/chromeTab'
 import useAuthAtom from './lib/useAuthAtom'
 import useTabAtom from './lib/useTabAtom'

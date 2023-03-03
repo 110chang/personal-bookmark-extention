@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { postBookmarks, refreshAuth } from './lib/repository'
 import useAuthAtom from './lib/useAuthAtom'
 import useError from './lib/useError'
 import useTabAtom from './lib/useTabAtom'
-import { postBookmarks, refreshAuth } from './lib/api'
-import { getUser } from './lib/storage'
 
 function useHome() {
   const navigate = useNavigate()
@@ -19,7 +18,6 @@ function useHome() {
 
   const submitBookmark = async ({ title = '', url = '' }) => {
     const res = await postBookmarks({ title, url })
-    const json = await res.json()
 
     if (!res.ok) {
       if (res.status == 403) {
@@ -27,7 +25,7 @@ function useHome() {
         navigate('/login')
         return
       }
-      updateError(json.error ? `${json.error}` : `${res.status} ${res.statusText}`)
+      updateError(res.error ? `${res.error}` : `${res.status} ${res.statusText}`)
       return
     }
 
@@ -36,22 +34,18 @@ function useHome() {
   }
 
   useEffect(() => {
-    console.log(username)
     if (username) return
 
     ;(async function() {
-      const savedUser = await getUser()
-      console.log(savedUser)
-      const res = await refreshAuth({ id: savedUser ? savedUser.id : '' })
-      const json = await res.json()
-
+      const res = await refreshAuth()
+      console.log(res)
       if (!res.ok) {
         loggedOut()
         navigate('/login')
         return
       }
 
-      loggedIn(json.data)
+      loggedIn(res.data)
     }())
   }, [username])
 

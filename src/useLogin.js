@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { logIn } from './lib/api'
+import { logIn } from './lib/repository'
 import useAuthAtom from './lib/useAuthAtom'
 import useError from './lib/useError'
 import useForm from './lib/useForm'
@@ -12,14 +12,13 @@ function useLogin() {
 
   const submitFrom = async ({ username = '', password = '' }) => {
     const res = await logIn({ username, password })
-    const json = await res.json()
 
     if (!res.ok) {
-      updateError(json.error ? `${json.error}` : `${res.status} ${res.statusText}`)
+      updateError(res.error ? `${res.error}` : `${res.status} ${res.statusText}`)
       return
     }
 
-    loggedIn(json.data)
+    loggedIn(res.data)
     navigate('/')
   }
 

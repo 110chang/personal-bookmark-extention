@@ -1,5 +1,4 @@
 import { atom, useAtom } from 'jotai'
-import { clearUser, saveUser } from './storage'
 
 const authAtom = atom(null)
 
@@ -11,12 +10,10 @@ function useAuthAtom() {
   const loggedIn = (data) => {
     console.log(data)
     setAuth(data)
-    saveUser(data)
   }
 
   const loggedOut = () => {
     setAuth(null)
-    clearUser()
   }
 
   return {
