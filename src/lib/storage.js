@@ -1,28 +1,28 @@
-import chromeStorage from './chromeStorage'
-import sessionStorage from './sessionStorage'
+import extStorage from './extention/storage'
+import webStorage from './web/storage'
 
 export async function saveUser({ id = '', username = '' } = {}) {
   if (window.sessionStorage) {
-    sessionStorage.saveUser({ id, username })
+    webStorage.saveUser({ id, username })
   } else if (chrome.storage) {
-    await chromeStorage.saveUser({ id, username })
+    await extStorage.saveUser({ id, username })
   }
 }
 
 export async function getUser() {
   if (window.sessionStorage) {
-    return await Promise.resolve(sessionStorage.getUser())
+    return await Promise.resolve(webStorage.getUser())
   } else if (chrome.storage) {
-    return await chromeStorage.getUser()
+    return await extStorage.getUser()
   }
   return null
 }
 
 export async function clearUser() {
   if (window.sessionStorage) {
-    sessionStorage.clearUser()
+    webStorage.clearUser()
   } else if (chrome.storage) {
-    await chromeStorage.clearUser()
+    await extStorage.clearUser()
   }
 }
 

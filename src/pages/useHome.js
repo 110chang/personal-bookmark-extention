@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { clearUser, getUser, saveUser } from './lib/storage'
-import { postBookmarks, refreshAuth } from './lib/repository'
-import useAuthAtom from './lib/useAuthAtom'
-import useError from './lib/useError'
-import useTabAtom from './lib/useTabAtom'
+import { clearUser, getUser, saveUser } from '../lib/storage'
+import { postBookmarks, refreshAuth } from '../lib/repository'
+import useAuthAtom from '../stores/useAuthAtom'
+import useTabAtom from '../stores/useTabAtom'
+import useError from '../utils/useError'
 
 function useHome() {
   const navigate = useNavigate()

@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { saveUser } from './lib/storage'
-import { logIn } from './lib/repository'
-import useAuthAtom from './lib/useAuthAtom'
-import useError from './lib/useError'
-import useForm from './lib/useForm'
+import { saveUser } from '../lib/storage'
+import { logIn } from '../lib/repository'
+import useAuthAtom from '../stores/useAuthAtom'
+import useError from '../utils/useError'
+import useForm from '../utils/useForm'
 
 function useLogin() {
   const navigate = useNavigate()

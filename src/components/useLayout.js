@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { clearUser } from './lib/storage'
-import { logOut as apiLogOut } from './lib/repository'
-import { getCurrentTab } from './lib/chromeTab'
-import useAuthAtom from './lib/useAuthAtom'
-import useTabAtom from './lib/useTabAtom'
+import { clearUser } from '../lib/storage'
+import { logOut as apiLogOut } from '../lib/repository'
+import { getCurrentTab } from '../lib/extention/tab'
+import useAuthAtom from '../stores/useAuthAtom'
+import useTabAtom from '../stores/useTabAtom'
 
 function useLayout() {
   const navigate = useNavigate()

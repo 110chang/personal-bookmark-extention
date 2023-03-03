@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Layout from './Layout'
-import Login from './Login'
-import Home from './Home'
-import './index.css'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
+import Layout from './components/Layout'
+import Login from './pages/Login'
+import Home from './pages/Home'
+import './index.css'
 
 const routes = [
   {

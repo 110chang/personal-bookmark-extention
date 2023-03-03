@@ -1,12 +1,9 @@
 import api from './api'
+import messenger from './extention/messenger'
 
 export async function logIn({ username = '', password = '' }) {
   if (chrome.runtime) {
-    const message = await chrome.runtime.sendMessage({
-      name: 'login:background',
-      data: { username, password }
-    })
-    return JSON.parse(message)
+    return JSON.parse(await messenger.logIn({ username, password }))
   }
 
   const res = await api.logIn({ username, password })
@@ -21,8 +18,7 @@ export async function logIn({ username = '', password = '' }) {
 
 export async function logOut() {
   if (chrome.runtime) {
-    const message = await chrome.runtime.sendMessage({ name: 'logout:background' })
-    return JSON.parse(message)
+    return JSON.parse(await messenger.logOut())
   }
 
   const res = await api.logOut()
@@ -37,11 +33,7 @@ export async function logOut() {
 
 export async function refreshAuth({ id = '' }) {
   if (chrome.runtime) {
-    const message = await chrome.runtime.sendMessage({
-      name: 'refresh:background',
-      data: { id },
-    })
-    return JSON.parse(message)
+    return JSON.parse(await messenger.refreshAuth({ id }))
   }
 
   const res = await api.refreshAuth({ id })
@@ -56,11 +48,7 @@ export async function refreshAuth({ id = '' }) {
 
 export async function postBookmarks({ title = '', url = ''}) {
   if (chrome.runtime) {
-    const message = await chrome.runtime.sendMessage({
-      name: 'postBookmarks:background',
-      data: { title, url },
-    })
-    return JSON.parse(message)
+    return JSON.parse(await messenger.postBookmarks({ title, url }))
   }
 
   const res = await api.postBookmarks({ title, url })
