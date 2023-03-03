@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { clearUser, getUser, saveUser } from './lib/storage'
 import { postBookmarks, refreshAuth } from './lib/repository'
 import useAuthAtom from './lib/useAuthAtom'
 import useError from './lib/useError'
@@ -22,6 +23,7 @@ function useHome() {
     if (!res.ok) {
       if (res.status == 403) {
         loggedOut()
+        clearUser()
         navigate('/login')
         return
       }
@@ -30,6 +32,7 @@ function useHome() {
     }
 
     updateMessage('Successfully added.')
+    updateError('')
     clearTab()
   }
 
@@ -37,14 +40,19 @@ function useHome() {
     if (username) return
 
     ;(async function() {
-      const res = await refreshAuth()
+      const savedUser = await getUser()
+      console.log(savedUser)
+      const res = await refreshAuth({ id: savedUser ? savedUser.id : '' })
       console.log(res)
+
       if (!res.ok) {
         loggedOut()
+        clearUser()
         navigate('/login')
         return
       }
 
+      saveUser(res.data)
       loggedIn(res.data)
     }())
   }, [username])

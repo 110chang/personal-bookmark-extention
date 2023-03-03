@@ -1,17 +1,16 @@
 import api from './api'
-import { clearUser, getUser, saveUser } from './storage'
 
 export async function logIn({ username = '', password = '' }) {
   if (chrome.runtime) {
-    return chrome.runtime.sendMessage({ name: 'login:background', data: { username, password } })
+    const message = await chrome.runtime.sendMessage({
+      name: 'login:background',
+      data: { username, password }
+    })
+    return JSON.parse(message)
   }
 
   const res = await api.logIn({ username, password })
   const json = await res.json()
-
-  if (res.ok) {
-    saveUser(json.data)
-  }
 
   return {
     ...json,
@@ -22,39 +21,31 @@ export async function logIn({ username = '', password = '' }) {
 
 export async function logOut() {
   if (chrome.runtime) {
-    return chrome.runtime.sendMessage({ name: 'logout:background' })
+    const message = await chrome.runtime.sendMessage({ name: 'logout:background' })
+    return JSON.parse(message)
   }
 
   const res = await api.logOut()
-
-  if (!res.ok) {
-    console.error('logout failed')
-  }
-
-  clearUser()
+  const json = await res.json()
 
   return {
-    ok: res.ok,
+    ...json,
     status: res.status,
     statusText: res.statusText,
   }
 }
 
-export async function refreshAuth() {
+export async function refreshAuth({ id = '' }) {
   if (chrome.runtime) {
-    return chrome.runtime.sendMessage({ name: 'refresh:background' })
+    const message = await chrome.runtime.sendMessage({
+      name: 'refresh:background',
+      data: { id },
+    })
+    return JSON.parse(message)
   }
 
-  const savedUser = await getUser()
-  console.log(savedUser)
-  const res = await api.refreshAuth({ id: savedUser ? savedUser.id : '' })
+  const res = await api.refreshAuth({ id })
   const json = await res.json()
-
-  if (res.ok) {
-    saveUser(json.data)
-  } else {
-    clearUser()
-  }
 
   return {
     ...json,
@@ -65,21 +56,19 @@ export async function refreshAuth() {
 
 export async function postBookmarks({ title = '', url = ''}) {
   if (chrome.runtime) {
-    return chrome.runtime.sendMessage({ name: 'refresh:background', data: { id } })
+    const message = await chrome.runtime.sendMessage({
+      name: 'postBookmarks:background',
+      data: { title, url },
+    })
+    return JSON.parse(message)
   }
 
   const res = await api.postBookmarks({ title, url })
+  const json = await res.json()
 
-  if (!res.ok) {
-    if (res.status == 403) {
-      clearUser()
-    }
-    return {
-      ok: res.ok,
-      status: res.status,
-      statusText: res.statusText,
-    }
+  return {
+    ...json,
+    status: res.status,
+    statusText: res.statusText,
   }
-
-  return res
 }

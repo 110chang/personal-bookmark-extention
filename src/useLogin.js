@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { saveUser } from './lib/storage'
 import { logIn } from './lib/repository'
 import useAuthAtom from './lib/useAuthAtom'
 import useError from './lib/useError'
@@ -18,6 +19,7 @@ function useLogin() {
       return
     }
 
+    saveUser(res.data)
     loggedIn(res.data)
     navigate('/')
   }
