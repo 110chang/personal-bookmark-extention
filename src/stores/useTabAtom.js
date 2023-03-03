@@ -1,5 +1,4 @@
 import { atom, useAtom } from 'jotai'
-import { clearUser, saveUser } from '../lib/storage'
 
 const tabAtom = atom({ title: '', url: '' })
 

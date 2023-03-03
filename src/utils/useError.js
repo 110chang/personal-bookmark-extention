@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 function useError() {
   const [error, setError] = useState('')
