@@ -1,5 +1,7 @@
+const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 export function logIn({ username = '', password = '' }) {
-  return fetch('http://127.0.0.1:5000/api/login', {
+  return fetch(`${VITE_API_BASE_URL}/login`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -10,14 +12,14 @@ export function logIn({ username = '', password = '' }) {
 }
 
 export function logOut() {
-  return fetch('http://127.0.0.1:5000/api/logout', {
+  return fetch(`${VITE_API_BASE_URL}/logout`, {
     method: 'delete',
     credentials: 'include',
   })
 }
 
 export function refreshAuth({ id }) {
-  return fetch('http://127.0.0.1:5000/api/refresh', {
+  return fetch(`${VITE_API_BASE_URL}/refresh`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -27,14 +29,23 @@ export function refreshAuth({ id }) {
   })
 }
 
-export function postBookmarks({ title = '', url = ''}) {
-  return fetch('http://127.0.0.1:5000/api/bookmarks', {
+export function postBookmarks({ title = '', url = '', tags = [] }) {
+  return fetch(`${VITE_API_BASE_URL}/bookmarks`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
     },
     credentials: 'include',
-    body: JSON.stringify({ title, url }),
+    body: JSON.stringify({ title, url, tags }),
+  })
+}
+
+export function getTags() {
+  return fetch(`${VITE_API_BASE_URL}/tags`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
   })
 }
 
@@ -43,4 +54,5 @@ export default {
   logOut,
   refreshAuth,
   postBookmarks,
+  getTags,
 }

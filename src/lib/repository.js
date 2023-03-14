@@ -46,12 +46,27 @@ export async function refreshAuth({ id = '' }) {
   }
 }
 
-export async function postBookmarks({ title = '', url = ''}) {
+export async function postBookmarks({ title = '', url = '', tags = []}) {
   if (chrome.runtime) {
-    return JSON.parse(await messenger.postBookmarks({ title, url }))
+    return JSON.parse(await messenger.postBookmarks({ title, url, tags }))
   }
 
-  const res = await api.postBookmarks({ title, url })
+  const res = await api.postBookmarks({ title, url, tags })
+  const json = await res.json()
+
+  return {
+    ...json,
+    status: res.status,
+    statusText: res.statusText,
+  }
+}
+
+export async function getTags() {
+  if (chrome.runtime) {
+    return JSON.parse(await messenger.getTags())
+  }
+
+  const res = await api.getTags()
   const json = await res.json()
 
   return {

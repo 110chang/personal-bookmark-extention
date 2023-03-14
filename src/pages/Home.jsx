@@ -6,8 +6,10 @@ function Home() {
     error,
     message,
     tab,
+    tags,
     username,
     submitBookmark,
+    toggleTag,
     updateTab,
   } = useHome()
 
@@ -16,6 +18,10 @@ function Home() {
       ...tab,
       [prop]: e.target.value,
     })
+  }
+
+  const onTagChanged = (e) => {
+    toggleTag(e.target.value)
   }
 
   const onSubmit = async (e) => {
@@ -36,6 +42,25 @@ function Home() {
           <Form.Label>URL</Form.Label>
           <Form.Control name="url" placeholder="URL" type="text" value={tab.url} onChange={onChange('url')} />
         </Form.Group>
+
+        {tags.length == 0 ? null : (
+          <Form.Group className="mb-3" controlId="tags">
+            {tags.map(tag => (
+              <Form.Check
+                key={`tags-${tag.id}`}
+                id={`tags-${tag.id}`}
+                name="tags"
+                checked={tag.checked}
+                inline
+                label={tag.tagname}
+                type="checkbox"
+                value={tag.id}
+                onChange={onTagChanged}
+              />
+            ))}
+          </Form.Group>
+        )}
+
         {error ? (
           <Alert variant="danger">
             {error}

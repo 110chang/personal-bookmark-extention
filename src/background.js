@@ -1,4 +1,4 @@
-import { logIn, logOut, refreshAuth, postBookmarks } from './lib/api'
+import { logIn, logOut, refreshAuth, postBookmarks, getTags } from './lib/api'
 
 function createMessage(res = {}, json = {}) {
   return JSON.stringify({
@@ -39,8 +39,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return true
 
     case 'postBookmarks:background':
-      console.log(request.data)
       postBookmarks({ title: request.data.title, url: request.data.url }).then((res) => {
+        console.log(res)
+        res.json().then(json => {
+          sendResponse(createMessage(res, json))
+        })
+      })
+      return true
+
+    case 'getTags:background':
+      getTags().then((res) => {
         console.log(res)
         res.json().then(json => {
           sendResponse(createMessage(res, json))

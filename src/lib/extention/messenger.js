@@ -23,9 +23,16 @@ export async function postBookmarks({ title = '', url = ''}) {
   })
 }
 
+export async function getTags() {
+  return chrome.runtime.sendMessage({
+    name: 'getTags:background',
+  })
+}
+
 export default {
   logIn,
   logOut,
   refreshAuth,
   postBookmarks,
+  getTags,
 }
