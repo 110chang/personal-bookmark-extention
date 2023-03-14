@@ -4,7 +4,6 @@ import useHome from './useHome'
 function Home() {
   const {
     error,
-    message,
     tab,
     tags,
     username,
@@ -69,11 +68,6 @@ function Home() {
         <Button variant="primary" type="submit" className="mx-auto">
           Submit
         </Button>
-        {message ? (
-          <Alert variant="success" className="mt-3">
-            {message}
-          </Alert>
-        ) : null}
       </Form>
     </div>
   )

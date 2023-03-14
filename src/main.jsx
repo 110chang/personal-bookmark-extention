@@ -2,8 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createMemoryRouter } from 'react-router-dom'
 import Layout from './components/Layout'
-import Login from './pages/Login'
+import Complete from './pages/Complete'
 import Home from './pages/Home'
+import Login from './pages/Login'
 import './index.css'
 
 const routes = [
@@ -17,6 +18,10 @@ const routes = [
       {
         path: '/login',
         element: <Login />,
+      },
+      {
+        path: '/complete',
+        element: <Complete />,
       },
     ],
   },

@@ -1,7 +1,7 @@
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+import { VITE_REMOTE_BASE_URL } from '../settings'
 
 export function logIn({ username = '', password = '' }) {
-  return fetch(`${VITE_API_BASE_URL}/login`, {
+  return fetch(`${VITE_REMOTE_BASE_URL}/api/login`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -12,14 +12,14 @@ export function logIn({ username = '', password = '' }) {
 }
 
 export function logOut() {
-  return fetch(`${VITE_API_BASE_URL}/logout`, {
+  return fetch(`${VITE_REMOTE_BASE_URL}/api/logout`, {
     method: 'delete',
     credentials: 'include',
   })
 }
 
 export function refreshAuth({ id }) {
-  return fetch(`${VITE_API_BASE_URL}/refresh`, {
+  return fetch(`${VITE_REMOTE_BASE_URL}/api/refresh`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export function refreshAuth({ id }) {
 }
 
 export function postBookmarks({ title = '', url = '', tags = [] }) {
-  return fetch(`${VITE_API_BASE_URL}/bookmarks`, {
+  return fetch(`${VITE_REMOTE_BASE_URL}/api/bookmarks`, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ export function postBookmarks({ title = '', url = '', tags = [] }) {
 }
 
 export function getTags() {
-  return fetch(`${VITE_API_BASE_URL}/tags`, {
+  return fetch(`${VITE_REMOTE_BASE_URL}/api/tags`, {
     headers: {
       'Content-Type': 'application/json'
     },

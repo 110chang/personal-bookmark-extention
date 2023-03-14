@@ -8,7 +8,6 @@ import useError from '../utils/useError'
 
 function useHome() {
   const navigate = useNavigate()
-  const [message, setMessage] = useState('')
   const [tags, setTags] = useState([])
   const { username, loggedIn, loggedOut } = useAuthAtom()
   const { error, updateError } = useError()
@@ -19,10 +18,6 @@ function useHome() {
       ...tag,
       checked: checkedTagIds.indexOf(`${tag.id}`) > -1,
     }))
-  }
-
-  const updateMessage = (message) => {
-    setMessage(message)
   }
 
   const submitBookmark = async ({ title = '', url = '', tags = [] }) => {
@@ -39,9 +34,9 @@ function useHome() {
       return
     }
 
-    updateMessage('Successfully added.')
     updateError('')
     clearTab()
+    navigate('/complete')
   }
 
   useEffect(() => {
@@ -68,9 +63,9 @@ function useHome() {
   useEffect(() => {
     ;(async function() {
       const tagsRes = await getTags()
-
+      console.log(tagsRes)
       if (!tagsRes.ok) {
-        updateMessage(`${tagRes.status} ${tagsRes.statusText}`)
+        updateError(`${tagRes.status} ${tagsRes.statusText}`)
         return
       }
 
@@ -80,7 +75,6 @@ function useHome() {
 
   return {
     error,
-    message,
     tab,
     tags: enrichTags(tags, tab.tags),
     username,
@@ -90,7 +84,6 @@ function useHome() {
     submitBookmark,
     toggleTag,
     updateError,
-    updateMessage,
     updateTab,
   }
 }
