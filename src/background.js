@@ -39,7 +39,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return true
 
     case 'postBookmarks:background':
-      postBookmarks({ title: request.data.title, url: request.data.url }).then((res) => {
+      postBookmarks({ title: request.data.title, url: request.data.url, tags: request.data.tags }).then((res) => {
         console.log(res)
         res.json().then(json => {
           sendResponse(createMessage(res, json))

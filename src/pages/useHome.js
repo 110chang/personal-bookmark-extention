@@ -21,7 +21,11 @@ function useHome() {
   }
 
   const submitBookmark = async ({ title = '', url = '', tags = [] }) => {
-    const res = await postBookmarks({ title, url, tags })
+    const res = await postBookmarks({
+      title,
+      url,
+      tags: tags.map(tag => Number(tag))
+    })
 
     if (!res.ok) {
       if (res.status == 403) {

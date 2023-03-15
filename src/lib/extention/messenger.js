@@ -16,10 +16,10 @@ export async function refreshAuth({ id = '' }) {
   })
 }
 
-export async function postBookmarks({ title = '', url = ''}) {
+export async function postBookmarks({ title = '', url = '', tags = []}) {
   return chrome.runtime.sendMessage({
     name: 'postBookmarks:background',
-    data: { title, url },
+    data: { title, url, tags },
   })
 }
 
